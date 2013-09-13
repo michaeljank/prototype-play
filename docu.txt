@@ -1,0 +1,2 @@
+- Per default keine clientseitige Validierung, fehlerhafter Request liefert ganze HTML Seite retour
+- Läuft per default in play Konsole, für Deployment als WAR ist eigenen Plugin nötig (aufwändig zu konfigurieren, verlässlich?)
