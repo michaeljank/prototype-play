@@ -1,0 +1,51 @@
+@(textAreaMessage: String)(rows: Integer)(cols: Integer)(chars: Integer)
+
+@import helper._
+@import play.i18n._
+
+@main("Textarea test") {
+	<a href="tasks">Hauptseite</a>
+
+    <h3>serverseitig</h3>
+
+    @form(routes.Application.textarea()) {
+        <textarea name="textAreaMessage" cols="10" rows="1">@textAreaMessage</textarea>
+        <input type="submit" value="sync" />
+
+        <br/>
+        Rows: @rows<br/>
+        Cols: @cols<br/>
+        Character: @chars<br/>
+    }
+
+    <h3>clientseitig</h3>
+
+    <textarea id="textId" name="text" cols="10" rows="1"></textarea>
+    <br/>
+    <label id="rowId"></label> rows <br/>
+    <label id="colId"></label> cols <br/>
+    <label id="charsId"></label> characters <br/>
+
+    <h3>websocket</h3>
+
+    <input id="talk" type="button" value="talk" />
+    <label id="answer">...</label>
+
+    <script type="text/javascript" charset="utf-8">
+            var count = 0;
+            var WS = window['MozWebSocket'] ? MozWebSocket : WebSocket
+            var chatSocket = new WS("@routes.Application.websock().webSocketURL(request)")
+
+            var receiveEvent = function(event) {
+                $("#answer").text(event.data)
+            }
+
+            var handleReturnKey = function(e) {
+                chatSocket.send("msg " + (++count))
+            }
+
+            $("#talk").click(handleReturnKey)
+
+            chatSocket.onmessage = receiveEvent
+    </script>
+}
